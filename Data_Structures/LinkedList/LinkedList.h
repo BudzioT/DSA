@@ -32,6 +32,9 @@ public:
     bool search(T value);
     bool searchR(T value, Node<T>* head);
 
+    int length();
+    int lengthR(Node<T>* head, int count = 0);
+
     template<typename T> friend std::ostream& operator<<(std::ostream& os, const LinkedList<T>& list);
 private:
     Node<T>* m_head;
@@ -123,6 +126,26 @@ template<typename T> bool LinkedList<T>::searchR(T value, Node<T>* head)
     if (head->data == value)
         return true;
     return searchR(value, head->next);
+}
+
+/* Get the length of List, Time: O(N), Auxiliary: O(1) */
+template<typename T> int LinkedList<T>::length()
+{
+    int len = 0;
+    Node<T>* curr = m_head;
+    while (curr) {
+        ++len;
+        curr = curr->next;
+    }
+    return len;
+}
+
+/* Get the length of List Recursive, Time: O(N), Auxiliary: O(N) */
+template<typename T> int LinkedList<T>::lengthR(Node<T>* head, int count)
+{
+    if (!head)
+        return count;
+    return lengthR(head->next, count + 1);
 }
 
 
