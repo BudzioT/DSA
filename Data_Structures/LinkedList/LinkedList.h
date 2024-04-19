@@ -3,6 +3,7 @@
 
 #include <iostream>
 
+/* Node needed for Linked List */
 template<typename T> class Node
 {
 public:
@@ -13,6 +14,7 @@ public:
     Node* next;
 };
 
+/* Linked List */
 template<typename T> class LinkedList
 {
 public:
@@ -21,8 +23,14 @@ public:
 
     ~LinkedList();
 
+    Node<T>* head() const;
+
     void push(T value);
+    void insertAfter(Node<T>* prev, T value);
     void append(T value);
+
+    bool search(T value);
+    bool searchR(T value, Node<T>* head);
 
     template<typename T> friend std::ostream& operator<<(std::ostream& os, const LinkedList<T>& list);
 private:
@@ -58,12 +66,29 @@ template<typename T> LinkedList<T>::~LinkedList()
     }
 }
 
+/* Get the head */
+template<typename T> Node<T>* LinkedList<T>::head() const
+{
+    return m_head;
+}
+
 /* Inserting a Node at the beggining, Time: O(1), Auxiliary: O(1) */
 template<typename T> void LinkedList<T>::push(T value)
 {
     Node<T>* newNode = new Node<T>(value);
     newNode->next = m_head;
     m_head = newNode;
+}
+
+/* Insert a Node after given one, Time: O(1), Auxiliary: O(1) */
+template<typename T> void LinkedList<T>::insertAfter(Node<T>* prev, T value)
+{
+    if (!prev)
+        return;
+
+    Node<T>* newNode = new Node<T>(value);
+    newNode->next = prev->next;
+    prev->next = newNode;
 }
 
 /* Insert a Node at the end, Time: O(N), Auxiliary: O(1) */
@@ -76,6 +101,28 @@ template<typename T> void LinkedList<T>::append(T value)
     while (last->next)
         last = last->next;
     last->next = newNode;
+}
+
+/* Searches if the given value exists, Time: O(N), Auxiliary: O(1) */
+template<typename T> bool LinkedList<T>::search(T value)
+{
+    Node<T>* current = m_head;
+    while (current) {
+        if (current->data == value)
+            return true;
+        current = current->next;
+    }
+    return false;
+}
+
+/* Searches if the given value exists Recursive, Time: O(N), Auxiliary: O(N) */
+template<typename T> bool LinkedList<T>::searchR(T value, Node<T>* head)
+{
+    if (!head)
+        return false;
+    if (head->data == value)
+        return true;
+    return searchR(value, head->next);
 }
 
 
